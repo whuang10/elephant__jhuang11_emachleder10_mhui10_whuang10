@@ -1,1 +1,1 @@
-# Elephant_jhuang11_emachleder10_mhui10_whuang10
+# Team Elephant
