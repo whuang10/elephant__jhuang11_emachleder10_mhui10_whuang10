@@ -1,1 +1,2 @@
-# Elephant_emachleder10_jhuang11_mhui10_whuang10
+# Team Elephant
+Jeffrey Huang, Ethan Machleder, Matthew Hui, Winnie Huang
