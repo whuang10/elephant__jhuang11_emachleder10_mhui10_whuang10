@@ -1,2 +1,2 @@
 # Team Elephant
-Jeffrey Huang, Ethan Machleder, Matthew Hui, Winnie Huang
+SoftDev Project 0: Jeffrey Huang(PM), Ethan Machleder, Matthew Hui, Winnie Huang
