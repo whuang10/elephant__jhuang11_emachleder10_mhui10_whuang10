@@ -1,0 +1,6 @@
+TEAM Elephant DEVLOG
+
+Elephant -- 2020-12-17 21:33
+	-Finished the design doc
+	-Started the devlog 
+-----------------------------------------------------
