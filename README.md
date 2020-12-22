@@ -19,4 +19,4 @@ Ethan - Database
 
 Description: Registered users can add to existing stories or create new stories. When adding to an existing story, the user can only view the latest edit, not the entire story. After contributing to a story, the user can then view the whole story (most current version).
 
-Launch codes:
+Launch codes: 
