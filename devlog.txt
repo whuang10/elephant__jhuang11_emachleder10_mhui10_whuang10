@@ -9,5 +9,6 @@ Elephant -- 2020-12-18 21:03
 	- Finshed new design doc for P0
 	- Updated README and devlog
 -----------------------------------------------------------------------------------
-Jeffrey -- 2020-12-2 18:54
-  - Re-added design_wiki 
+Elephant -- 2020-12-22 20:28
+  - Re-added design_wiki
+	- Revised design.pdf with adding a key to our site map, adding a expected deadline, and changing a column of our database referencing team GreedyToads
