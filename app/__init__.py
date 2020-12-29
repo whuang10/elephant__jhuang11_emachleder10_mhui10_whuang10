@@ -12,13 +12,10 @@ import sqlite3
 
 #the conventional way:
 #from flask import Flask, render_template, request
-
 db = sqlite3.connect("p0database.db")
-
 
 app = Flask(__name__)    #create Flask object
 app.secret_key = os.urandom(32) #Need this, if we didn't include this it would produce a runtime error
-
 
 @app.route("/") #, methods=['GET', 'POST'])
 def disp_loginpage():
