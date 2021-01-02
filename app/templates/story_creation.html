@@ -1,0 +1,27 @@
+<!--
+Team Elephant (Jeffrey Huang, Matthew Hui, Winnie Huang, Ethan Machleder)
+SoftDev
+P0 - Da Art of Storytellin' (Pt. 2)
+2021-1-11
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Creating Story Page </title>
+  </head>
+  <body>
+
+     <h1>    Create a Title:    </h1>
+    <form action = "/story_check">
+      <input type = "text" placeholder = "Title" name = "temp-title">
+      <input type = "submit" value = "Create Title">
+      {% if {[cont]} == 'go' %}
+      <h2> Title: {{title}}</h2>
+         <h2>    Insert Your Story Below:    </h2>
+        <span> <h5> <input type = "text" placeholder = "Story Text" name = "story"> </h5> </span>
+        <input type = "submit" value = "Create Story">
+      {% endif %}
+
+    </form>
+  </body>
+</html>

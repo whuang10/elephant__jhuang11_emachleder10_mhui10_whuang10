@@ -44,14 +44,13 @@ def registerConfirming():
     u = request.args['new_username']
     p = request.args['new_password_1']
     p1 = request.args['new_password_2']
-    c = ''
     if p != p1:
-        return render_template('invalid_register.html', error_type = "Passwords do not match, try again")
+        return render_template('register.html', error_type = "Passwords do not match, try again")
     elif u in usernames_list:
-        return render_template('invalid_register.html', error_type = "Username already exists, try again")
+        return render_template('register.html', error_type = "Username already exists, try again")
     else:
         c1 = db.cursor()
-        c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
+        c1.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u, p))
         db.commit()
         print("testing register")
         return render_template("homepage.html", user = u)
@@ -86,6 +85,52 @@ db.close()
 #Displays homepage when successful login
 @app.route("/homepage")
 
+
+#Asks user for a title for a new story
+@app.route("/create_story")
+def title_maker():
+    return render_template('story_creation.html')
+
+#make story
+@app.route("/story_check")
+def story_check():
+    title = request.args['temp-title']
+    orig_story = request.args['story']
+
+    db = sqlite3.connect("p0database.db")
+    c3 = db.cursor()
+    if ("SELECT LOCATE(title, titles) FROM stories;") != 0:
+        return render_template('story_creation.html', title_error = "Title Already Exists")
+    else:
+        c4.execute("INSERT INTO stories (title, entire, recent) VALUES (?, ?, ?)", (title, orig_story, orig_story))
+        c4.execute("INSERT INTO users (contributions) VALUES (?)", (title))
+        return render_template('story_creation.html', title = title, cont = 0)
+db.close()
+
+# #Checks to see if the title exists
+# @app.route("/title-check")
+# def title_Check():
+#     title = request.args['temp-title']
+
+#     db = sqlite3.connect("p0database.db")
+#     c3 = db.cursor()
+#     if ("SELECT LOCATE(title, titles) FROM stories;") == 0:
+#         return render_template('story_creation.html', story_error = "Title Already Exists")
+#     else:
+#         return render_template('story_creation.html', title = title)
+# db.close()
+
+
+# #Creates story and adds it to the database
+# @app.route("/create_story")
+# def story_add():
+#     db = sqlite3.connect("p0database.db")
+#     c4 = db.cursor()
+#     orig_story = request.args['story']
+#     c4.execute("INSERT INTO stories (title, entire, recent) VALUES (?, ?, ?)", (title, orig_story, orig_story))
+#     c4.execute("INSERT INTO users (contributions) VALUES (?)", (title))
+#     return render_template('display_recent.html')
+# db.close()
 
 #Displays login page and removes user from session
 @app.route("/logout")
