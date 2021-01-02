@@ -9,10 +9,13 @@ from flask import session
 import os
 import sqlite3
 
-#Create db for user information
+#Create db for user and story information
 db = sqlite3.connect("p0database.db")
 c = db.cursor()
-c.execute("""CREATE TABLE IF NOT EXISTS users (id integer primary key, username text, password text, story_id text)""")
+#c.execute('DROP TABLE IF EXISTS users') #for changing columns
+#c.execute('DROP TABLE IF EXISTS stories') #for changing columns
+c.execute("""CREATE TABLE IF NOT EXISTS users (id INTEGER, username text, password text, contributions text)""")
+c.execute("""CREATE TABLE IF NOT EXISTS stories (id INTEGER, title text, entire text, recent text, contributors text)""")
 db.commit()
 db.close()
 
@@ -27,11 +30,12 @@ def disp_loginpage():
     else:
         return render_template('login.html')
 
+#Routes user to registration page
 @app.route("/register")
 def register():
     return render_template('register.html')
 
-#Registration for new user, stores info into users db
+#Registration for new user, stores user info into users db
 @app.route("/register_auth")
 def registerConfirming():
     db = sqlite3.connect("p0database.db")
@@ -39,13 +43,16 @@ def registerConfirming():
     u = request.args['new_username']
     p = request.args['new_password_1']
     p1 = request.args['new_password_2']
+    if "SELECT * FROM users == null
+    i = int("SELECT id FROM users WHERE id=(SELECT max(id) FROM users)") + 1
+    c = ''
     if p != p1:
         return render_template('invalid_register.html', error_type = "Passwords do not match, try again")
     elif u in usernames_list:
         return render_template('invalid_register.html', error_type = "Username already exists, try again")
     else:
         c1 = db.cursor()
-        c1.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u, p))
+        c1.execute("INSERT INTO users (id, username, password, contributions) VALUES (?, ?, ?, ?)", (i ,u, p, c))
         db.commit()
         print("testing register")
         return render_template("homepage.html", user = u)
@@ -73,8 +80,8 @@ def welcome():
             session["username"] = username
             return render_template('homepage.html', user = username)
     else:
-        return render_template('invalid.html')
-    return render_template ( 'homepage.html')  #response to a form submission
+        return render_template('login.html', error_type = "Invalid login attempt, try again")
+    return render_template ('homepage.html')  #response to a form submission
 db.close()
 
 #Displays homepage when successful login
