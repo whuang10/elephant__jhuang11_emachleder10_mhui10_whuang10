@@ -12,10 +12,10 @@ import sqlite3
 #Create db for user and story information
 db = sqlite3.connect("p0database.db")
 c = db.cursor()
-c.execute('DROP TABLE IF EXISTS users') #for changing columns
-c.execute('DROP TABLE IF EXISTS stories') #for changing columns
-c.execute("""CREATE TABLE IF NOT EXISTS users (id INTEGER, username text, password text, contributions text)""")
-c.execute("""CREATE TABLE IF NOT EXISTS stories (id INTEGER, title text, entire text, recent text, contributors text)""")
+#c.execute('DROP TABLE IF EXISTS users') #for changing columns
+#c.execute('DROP TABLE IF EXISTS stories') #for changing columns
+c.execute("""CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username text, password text, contributions text)""")
+c.execute("""CREATE TABLE IF NOT EXISTS stories (id INTEGER PRIMARY KEY, title text, entire text, recent text, contributors text)""")
 db.commit()
 db.close()
 
@@ -39,14 +39,11 @@ def register():
 @app.route("/register_auth")
 def registerConfirming():
     db = sqlite3.connect("p0database.db")
+    c2 = db.cursor()
     usernames_list = "SELECT usernames FROM users;"
     u = request.args['new_username']
     p = request.args['new_password_1']
     p1 = request.args['new_password_2']
-    if "SELECT * FROM users" == null:
-        i = 0
-    else:
-        i = int("SELECT id FROM users WHERE id=(SELECT max(id) FROM users)") + 1
     c = ''
     if p != p1:
         return render_template('invalid_register.html', error_type = "Passwords do not match, try again")
@@ -54,7 +51,7 @@ def registerConfirming():
         return render_template('invalid_register.html', error_type = "Username already exists, try again")
     else:
         c1 = db.cursor()
-        c1.execute("INSERT INTO users (id, username, password, contributions) VALUES (?, ?, ?, ?)", (i ,u, p, c))
+        c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
         db.commit()
         print("testing register")
         return render_template("homepage.html", user = u)
