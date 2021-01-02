@@ -17,3 +17,8 @@ Elephant -- 2020-12-29 17:20
 	- Created and completed user registration and login, added templates for login and register
 	- Started the construction of db user tables with basic information
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Elephant -- 2021-01-02 18:02
+	- Created and started story creation page
+	- Updated user and story tables with new columns
+	- Worked out table ids
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
