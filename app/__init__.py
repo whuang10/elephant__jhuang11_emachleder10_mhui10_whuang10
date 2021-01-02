@@ -9,20 +9,20 @@ from flask import session
 import os
 import sqlite3
 
-#the conventional way:
-#from flask import Flask, render_template, request
-
-db = sqlite3.connect("p0database.db")   #create db connection
+#Create db for user information
+db = sqlite3.connect("p0database.db")
 c = db.cursor()
 c.execute("""CREATE TABLE IF NOT EXISTS users (username text, password text)""")
 db.commit()
 db.close()
-app = Flask(__name__)    #create Flask object
-app.secret_key = os.urandom(32) #Need this, if we didn't include this it would produce a runtime error
 
+app = Flask(__name__)    #create Flask object
+app.secret_key = os.urandom(32) #need this, if we didn't include this it would produce a runtime error
+
+#Checks if user is in session
 @app.route("/") #methods=['GET', 'POST']
 def disp_loginpage():
-    if 'username' in session: #Checks if the user is logged in
+    if 'username' in session:
         return render_template('homepage.html', user = 'abc')
     else:
         return render_template( 'login.html')
@@ -31,6 +31,7 @@ def disp_loginpage():
 def register():
     return render_template('register.html')
 
+#Registration for new user, stores info into users db
 @app.route("/register_auth")
 def registerConfirming():
     db = sqlite3.connect("p0database.db")
@@ -48,9 +49,10 @@ def registerConfirming():
         db.commit()
         print("testing register")
         return render_template("homepage.html", user = u)
-
 db.close()
 
+
+#Checks credentials of login attempt
 @app.route("/auth") # methods=['GET', 'POST']
 def welcome():
     db = sqlite3.connect("p0database.db")
@@ -73,20 +75,21 @@ def welcome():
             return render_template('homepage.html', user = username)
     else:
         return render_template('invalid.html')
-
     return render_template ( 'homepage.html')  #response to a form submission
-
 db.close()
 
+#Displays homepage when successful login
 @app.route("/homepage")
 
 
+#Displays login page and removes user from session
 @app.route("/logout")
 def logout():
     session.pop('username', None) #removes the session
     return render_template('login.html')
 
+
+#Enables debugging, auto-restarting of server when this file is modified
 if __name__ == "__main__": #false if this file imported as module
-    #enable debugging, auto-restarting of server when this file is modified
     app.debug = True
     app.run()
