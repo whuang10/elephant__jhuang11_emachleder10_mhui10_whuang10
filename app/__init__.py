@@ -1,7 +1,7 @@
 # Team Elephant (Jeffrey Huang, Matthew Hui, Winnie Huang, Ethan Machleder)
 # SoftDev
-# K15 -- Sessions Greetings
-# 2020-12-11
+# P0 - Da Art of Storytellin' (Pt. 2)
+# 2021-1-11
 from flask import Flask             #facilitate flask webserving
 from flask import render_template   #facilitate jinja templating
 from flask import request           #facilitate form submission
@@ -12,7 +12,7 @@ import sqlite3
 #Create db for user information
 db = sqlite3.connect("p0database.db")
 c = db.cursor()
-c.execute("""CREATE TABLE IF NOT EXISTS users (username text, password text)""")
+c.execute("""CREATE TABLE IF NOT EXISTS users (id integer primary key, username text, password text, story_id text)""")
 db.commit()
 db.close()
 
@@ -23,9 +23,9 @@ app.secret_key = os.urandom(32) #need this, if we didn't include this it would p
 @app.route("/") #methods=['GET', 'POST']
 def disp_loginpage():
     if 'username' in session:
-        return render_template('homepage.html', user = 'abc')
+        return render_template('homepage.html', user = 'username')
     else:
-        return render_template( 'login.html')
+        return render_template('login.html')
 
 @app.route("/register")
 def register():
@@ -42,7 +42,7 @@ def registerConfirming():
     if p != p1:
         return render_template('invalid_register.html', error_type = "Passwords do not match, try again")
     elif u in usernames_list:
-        return render_template('invalid_register.html', error_type = "username already exists")
+        return render_template('invalid_register.html', error_type = "Username already exists, try again")
     else:
         c1 = db.cursor()
         c1.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u, p))
@@ -50,7 +50,6 @@ def registerConfirming():
         print("testing register")
         return render_template("homepage.html", user = u)
 db.close()
-
 
 #Checks credentials of login attempt
 @app.route("/auth") # methods=['GET', 'POST']
