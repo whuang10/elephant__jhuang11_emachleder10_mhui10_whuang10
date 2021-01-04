@@ -44,13 +44,14 @@ def registerConfirming():
     u = request.args['new_username']
     p = request.args['new_password_1']
     p1 = request.args['new_password_2']
+    c = ''
     if p != p1:
-        return render_template('register.html', error_type = "Passwords do not match, try again")
+        return render_template('invalid_register.html', error_type = "Passwords do not match, try again")
     elif u in usernames_list:
-        return render_template('register.html', error_type = "Username already exists, try again")
+        return render_template('invalid_register.html', error_type = "Username already exists, try again")
     else:
         c1 = db.cursor()
-        c1.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u, p))
+        c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
         db.commit()
         print("testing register")
         return render_template("homepage.html", user = u)
@@ -119,7 +120,6 @@ db.close()
 #     else:
 #         return render_template('story_creation.html', title = title)
 # db.close()
-
 
 # #Creates story and adds it to the database
 # @app.route("/create_story")
