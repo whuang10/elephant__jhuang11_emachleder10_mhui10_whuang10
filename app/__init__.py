@@ -14,8 +14,8 @@ db = sqlite3.connect("p0database.db")
 c = db.cursor()
 #c.execute('DROP TABLE IF EXISTS stories') #for changing columns
 #c.execute('DROP TABLE IF EXISTS users') #for changing columns
-c.execute("""CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, user_id text, username text, password text, contributions text)""")
-c.execute("""CREATE TABLE IF NOT EXISTS stories (id INTEGER PRIMARY KEY, title text, entire text, recent text, contributors text)""")
+c.execute("""CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, username text, password text, contributions text)""")
+c.execute("""CREATE TABLE IF NOT EXISTS stories (story_id INTEGER PRIMARY KEY, title text, entire text, recent text, contributors text)""")
 db.commit()
 db.close()
 
@@ -89,8 +89,8 @@ def welcome():
     if username in u_list:
         if password in p_list:
             session["username"] = username
-            global i
-            i = u_list.index(username)
+            global id
+            id = u_list.index(username)
             #print(str(i) + " HERE IS THE user_id")
             return render_template('homepage.html', user = username)
     else:
@@ -106,7 +106,7 @@ def returnHome():
 #Asks user for a title for a new story
 @app.route("/create_story")
 def title_maker():
-    print(str(i) + "HEREIS THE USER_id")
+    print(str(id) + " HEREIS THE USER_id")
     return render_template('story_creation.html', titleExists = 0)
 
 #make story
@@ -114,7 +114,7 @@ def title_maker():
 def story_check():
     title = request.args['temp-title']
     orig_story = request.args['story']
-    user = i
+    user = id
     title_list = []
     db = sqlite3.connect("p0database.db")
     c3 = db.cursor()
@@ -123,17 +123,19 @@ def story_check():
     for x in c3.execute("SELECT title FROM stories"):
         for y in x:
             title_list.append(y.lower())
-    if (title.lower() in title_list):
-        return render_template('story_creation.html', titleExists = 1, story = orig_story )
-    else:
-        c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title+ " " , orig_story, orig_story, user))
-        for x in c3.execute("SELECT contributions FROM users"):
-            for y in x:
-                userConts.append(y)
-        updatedUserConts = userConts[user] + title + " "
-        c3.execute("UPDATE users SET contributions = ? WHERE user_id = ?", (updatedUserConts,user))
-        db.commit()
-        return render_template('story_view.html', story = orig_story, title = title)
+        for y in x:
+            if (title.lower() == y):
+                return render_template('story_creation.html', titleExists = 1, story = orig_story )
+            else:
+                c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title + " ", orig_story, orig_story, user))
+                for x in c3.execute("SELECT contributions FROM users"):
+                    for y in x:
+                        userConts.append(y)
+                updatedUserConts = userConts[user] + title + " "
+                c3.execute("UPDATE users SET contributions = ? WHERE user_id = ?", (updatedUserConts,user))
+                db.commit()
+                return render_template('story_view.html', story = orig_story, title = title)
+
 db.close()
 
 # #Checks to see if the title exists
