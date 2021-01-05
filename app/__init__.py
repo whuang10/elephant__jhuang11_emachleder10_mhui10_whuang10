@@ -45,21 +45,14 @@ def registerConfirming():
     p = request.args['new_password_1']
     p1 = request.args['new_password_2']
     c = ''
-    id_list = []
-    for x in c2.execute("SELECT user_id FROM users"):
-        for b in x:
-            id_list.append(b)
-    if len(id_list) == 0:
-        i = 0
-    else:
-        i = int(id_list[-1]) + 1
+
     if p != p1:
         return render_template('invalid_register.html', error_type = "Passwords do not match, try again")
     elif u in usernames_list:
         return render_template('invalid_register.html', error_type = "Username already exists, try again")
     else:
         c1 = db.cursor()
-        c1.execute("INSERT INTO users (user_id, username, password, contributions) VALUES (?, ?, ?, ?)", (i, u, p, c))
+        c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
         db.commit()
         print("testing register")
         return render_template("login.html", error_type = "Please login with your new account")
@@ -123,44 +116,18 @@ def story_check():
     for x in c3.execute("SELECT title FROM stories"):
         for y in x:
             title_list.append(y.lower())
-        for y in x:
-            if (title.lower() == y):
-                return render_template('story_creation.html', titleExists = 1, story = orig_story )
-            else:
-                c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title + " ", orig_story, orig_story, user))
-                for x in c3.execute("SELECT contributions FROM users"):
-                    for y in x:
-                        userConts.append(y)
-                updatedUserConts = userConts[user] + title + " "
-                c3.execute("UPDATE users SET contributions = ? WHERE user_id = ?", (updatedUserConts,user))
-                db.commit()
-                return render_template('story_view.html', story = orig_story, title = title)
-
+    if (title.lower() in title_list): #if title already exists
+        return render_template('story_creation.html', titleExists = 1, story = orig_story )
+    else:
+        c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title+ " " , orig_story, orig_story, user + ", "))
+        for x in c3.execute("SELECT contributions FROM users"):
+            for y in x:
+                userConts.append(y)
+        updatedUserConts = userConts[user] + title + " "
+        c3.execute("UPDATE users SET contributions = ? WHERE user_id = ?", (updatedUserConts,user))
+        db.commit()
+        return render_template('story_view.html', story = orig_story, title = title)
 db.close()
-
-# #Checks to see if the title exists
-# @app.route("/title-check")
-# def title_Check():
-#     title = request.args['temp-title']
-
-#     db = sqlite3.connect("p0database.db")
-#     c3 = db.cursor()
-#     if ("SELECT LOCATE(title, titles) FROM stories;") == 0:
-#         return render_template('story_creation.html', story_error = "Title Already Exists")
-#     else:
-#         return render_template('story_creation.html', title = title)
-# db.close()
-
-# #Creates story and adds it to the database
-# @app.route("/create_story")
-# def story_add():
-#     db = sqlite3.connect("p0database.db")
-#     c4 = db.cursor()
-#     orig_story = request.args['story']
-#     c4.execute("INSERT INTO stories (title, entire, recent) VALUES (?, ?, ?)", (title, orig_story, orig_story))
-#     c4.execute("INSERT INTO users (contributions) VALUES (?)", (title))
-#     return render_template('display_recent.html')
-# db.close()
 
 #Displays login page and removes user from session
 @app.route("/logout")
