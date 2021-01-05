@@ -39,19 +39,20 @@ def register():
 @app.route("/register_auth")
 def registerConfirming():
     db = sqlite3.connect("p0database.db")
-    c2 = db.cursor()
-    usernames_list = "SELECT usernames FROM users;"
+    c1 = db.cursor()
+    u_list = []
+    for x in c1.execute("SELECT username FROM users"):
+        for y in x:
+            u_list.append(y)
     u = request.args['new_username']
     p = request.args['new_password_1']
     p1 = request.args['new_password_2']
     c = ''
-
-    if p != p1:
-        return render_template('invalid_register.html', error_type = "Passwords do not match, try again")
-    elif u in usernames_list:
-        return render_template('invalid_register.html', error_type = "Username already exists, try again")
+    if u in u_list:
+        return render_template('register.html', error_type = "Username already exists, try again")
+    elif p != p1:
+        return render_template('register.html', error_type = "Passwords do not match, try again")
     else:
-        c1 = db.cursor()
         c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
         db.commit()
         print("testing register")
@@ -84,7 +85,7 @@ def welcome():
             session["username"] = username
             global id
             id = u_list.index(username)
-            #print(str(i) + " HERE IS THE user_id")
+            print(str(id) + " HERE IS THE user_id")
             return render_template('homepage.html', user = username)
     else:
         return render_template('login.html', error_type = "Invalid login attempt, try again")
@@ -99,7 +100,7 @@ def returnHome():
 #Asks user for a title for a new story
 @app.route("/create_story")
 def title_maker():
-    print(str(id) + " HEREIS THE USER_id")
+    print(str(id) + "HEREIS THE USER_id")
     return render_template('story_creation.html', titleExists = 0)
 
 #make story
@@ -108,23 +109,24 @@ def story_check():
     title = request.args['temp-title']
     orig_story = request.args['story']
     user = id
+    name = username_homepage
     title_list = []
     db = sqlite3.connect("p0database.db")
     c3 = db.cursor()
     userConts = []
-
     for x in c3.execute("SELECT title FROM stories"):
         for y in x:
             title_list.append(y.lower())
-    if (title.lower() in title_list): #if title already exists
+    if (title.lower() + " ") in title_list:
         return render_template('story_creation.html', titleExists = 1, story = orig_story )
     else:
-        c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title+ " " , orig_story, orig_story, user + ", "))
+        c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title+ " " , orig_story, orig_story, name+ ", "))
+
         for x in c3.execute("SELECT contributions FROM users"):
             for y in x:
                 userConts.append(y)
         updatedUserConts = userConts[user] + title + " "
-        c3.execute("UPDATE users SET contributions = ? WHERE user_id = ?", (updatedUserConts,user))
+        c3.execute("UPDATE users SET contributions = ? WHERE username = ?", (updatedUserConts + ", ", username_homepage))
         db.commit()
         return render_template('story_view.html', story = orig_story, title = title)
 db.close()
