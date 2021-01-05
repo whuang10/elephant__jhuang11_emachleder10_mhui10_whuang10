@@ -12,8 +12,8 @@ import sqlite3
 #Create db for user and story information
 db = sqlite3.connect("p0database.db")
 c = db.cursor()
-#c.execute('DROP TABLE IF EXISTS stories') #for changing columns
-#c.execute('DROP TABLE IF EXISTS users') #for changing columns
+c.execute('DROP TABLE IF EXISTS stories') #for changing columns
+c.execute('DROP TABLE IF EXISTS users') #for changing columns
 c.execute("""CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, username text, password text, contributions text)""")
 c.execute("""CREATE TABLE IF NOT EXISTS stories (story_id INTEGER PRIMARY KEY, title text, entire text, recent text, contributors text)""")
 db.commit()
@@ -120,16 +120,20 @@ def story_check():
     if (title.lower() + " ") in title_list:
         return render_template('story_creation.html', titleExists = 1, story = orig_story )
     else:
-        c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title+ " " , orig_story, orig_story, name+ ", "))
+        c3.execute("INSERT INTO stories (title, entire, recent, contributors) VALUES (?, ?, ?, ?)", (title + " " , orig_story, orig_story, name + " "))
 
         for x in c3.execute("SELECT contributions FROM users"):
             for y in x:
                 userConts.append(y)
         updatedUserConts = userConts[user] + title + " "
-        c3.execute("UPDATE users SET contributions = ? WHERE username = ?", (updatedUserConts + ", ", username_homepage))
+        c3.execute("UPDATE users SET contributions = ? WHERE username = ?", (updatedUserConts + " ", username_homepage))
         db.commit()
         return render_template('story_view.html', story = orig_story, title = title)
 db.close()
+
+@app.route("/edit_story")
+def edit_story():
+    return render_template('homepage.html', user = username_homepage)
 
 #Displays login page and removes user from session
 @app.route("/logout")
