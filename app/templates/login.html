@@ -6,29 +6,29 @@ K15 -- Sessions Greetings
 -->
 <!DOCTYPE html>
 <html>
+
   <head>
     <title> LOGIN PAGE </title>
   </head>
+
   <body>
 
-  <h1> LOGIN PAGE </h1>
-  
-  <h2> Welcome! Enter your username & password below to proceed. </h2>
-  
-  <h3>{{error_type}}</h3>
-  
 
-    <form action="/auth">
+  <h1> Welcome, Enter your username & password below to proceed. </h1>
+  {{error_type}}
+    <form action="/auth" method = "post">
       <input type="text" placeholder="Username" name="username">
       <input type="password" placeholder="Password" name="password">
       <input type="submit" name="sub1">
     </form>
+     <br>
 
   <h2>
-    Don't have an account? Register here:
+    Don't have an account?
     <form action = "/register">
       <input type = "submit" value = "Register">
     </form>
   </h2>
   </body>
+
 </html>

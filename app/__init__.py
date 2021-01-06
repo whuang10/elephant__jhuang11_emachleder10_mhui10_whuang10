@@ -12,8 +12,8 @@ import sqlite3
 #Create db for user and story information
 db = sqlite3.connect("p0database.db")
 c = db.cursor()
-#c.execute('DROP TABLE IF EXISTS stories') #for changing columns
-#c.execute('DROP TABLE IF EXISTS users') #for changing columns
+#c.execute("DROP TABLE IF EXISTS stories") #for changing columns
+#c.execute("DROP TABLE IF EXISTS users") #for changing columns
 c.execute("""CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username text, password text, contributions text)""")
 c.execute("""CREATE TABLE IF NOT EXISTS stories (id INTEGER PRIMARY KEY, title text, entire text, recent text, contributors text)""")
 db.commit()
@@ -55,16 +55,16 @@ def registerConfirming():
 
     #Firsts check if the passwords match
     if p != p1:
-        return render_template('register.html', error_type = "Passwords do not match, please try again.")
+        return render_template('register.html', error_type = "Passwords do not match, try again")
     #Then checks if the username exists
     elif u in usernames_list:
-        return render_template('register.html', error_type = "Username already exists, please try again.")
+        return render_template('register.html', error_type = "Username already exists, try again")
     #If both pass, it adds the newly registered user and directs the user to the login page
     else:
         c1 = db.cursor()
         c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
         db.commit()
-        return render_template("login.html", error_type = "Please login with your new account.")
+        return render_template("login.html", error_type = "Please login with your new account")
 db.close()
 
 #Checks credentials of login attempt
@@ -99,7 +99,7 @@ def welcome():
             session["user"] = username
             return render_template('homepage.html', user = username, contribution_list = user_conts)
     else:
-        return render_template('login.html', error_type = "Invalid login attempt, please try again.")
+        return render_template('login.html', error_type = "Invalid login attempt, try again")
     #return render_template ('homepage.html', user = username, contribution_list = user_conts)  #response to a form submission
 db.close()
 
@@ -127,7 +127,7 @@ db.close()
 
 #Asks user for a title for a new story
 @app.route("/create_story", methods = ['GET', 'POST'])
-def title_maker():
+def create_story():
     return render_template('story_creation.html', titleExists = 0)
 
 #Allows the user to make their own story. (Includes story details & title)
@@ -171,62 +171,75 @@ def story_check():
                 userConts.append(y)
         #String with the user contributions of a specific person separated by ~ since we figure it was the least used symbol
         updatedUserConts = userConts[user_index] + title + "~"
-        #Updates the database with new data
+        #Updates the database with new dataupdatedUserConts
         c3.execute("UPDATE users SET contributions = ? WHERE username = ?", (updatedUserConts, username))
         db.commit()
         return render_template('story_view.html', story = orig_story, title = title)
 db.close()
 
 @app.route("/story_view", methods = ['GET', 'POST'])
-def displayStory():
-    title = request.form['title']
-    title_list = []
-    story_list = []
-    db = sqlite3.connect("p0database.db")
-    c5 = db.cursor()
-    for x in c5.execute("SELECT title FROM stories"):
-        title_list.append(x[0])
-    for x in c5.execute("SELECT entire FROM stories"):
-        story_list.append(x[0])
-    story_index = title_list.index(title)
-    return render_template('story_view.html', story = story_list[story_index], title = title)
-db.close()
-
-@app.route("/edit_stories", methods = ['GET', 'POST'])
-def story_edit():
+def story_view():
     db = sqlite3.connect("p0database.db")
     c4 = db.cursor()
+    title = request.form['title']
+    editor = int(request.form['editor'])
+    title_list = []
+    story_list = []
+    for x in c4.execute("SELECT title FROM stories"):
+        title_list.append(x[0])
+    for x in c4.execute("SELECT entire FROM stories"):
+        story_list.append(x[0])
+    story_index = title_list.index(title)
+    return render_template('story_view.html', story = story_list[story_index], title = title, editor = editor)
+db.close()
+
+@app.route("/story_edit", methods = ['GET', 'POST'])
+def story_edit():
+    db = sqlite3.connect("p0database.db")
+    c5 = db.cursor()
     username = session["user"]
     list_titles = []
     list_output = []
-    for x in c4.execute("SELECT title FROM stories"):
-        list_titles.append(x)
+    for x in c5.execute("SELECT title FROM stories"):
+        list_titles.append(x[0])
     count = 0
-    for x in c4.execute("SELECT contributors FROM stories"):
+    for x in c5.execute("SELECT contributors FROM stories"):
         if username in x: #nothing happens
             print()
         else:
             list_output.append(list_titles[count])
         count = count + 1
-    return render_template
+    return render_template('story_edit.html', title_list = list_output)
+db.close()
 
 #Allows user to edit a story he hasn't already editted
-@app.route("/add_text", methods = ['GET', 'POST'])
-def add_text():
+@app.route("/story_editor", methods = ['GET', 'POST'])
+def story_editor():
     db = sqlite3.connect("p0database.db")
-    c5 = db.cursor()
+    c6 = db.cursor()
     username = session["user"]
     new_text = request.form['new_text']
     title = request.form['title']
-    c5.execute("UPDATE stories SET recent = ? WHERE title = ?", (new_text, title))
-    new_entire = c5.execute("SELECT entire WHERE title = ? FROM stories", (title)) + "\n" + new_text
-    c5.execute("UPDATE stories SET entire = ? WHERE title = ?", (new_entire, title))
-    new_contributors = c5.execute("SELECT contributors WHERE title = ? FROM stories", (title)) + "~" + username
-    c5.execute("UPDATE stories SET contributors = ? WHERE title = ?", (new_contributors, title))
-    new_contributions = c5.execute("SELECT contributors WHERE username = ? FROM users", (username)) + "," + title
-    c5.execute("UPDATE users SET contributions = ? WHERE username = ?", (new_contributions,username))
+    c6.execute("UPDATE stories SET recent = ? WHERE title = ?", (new_text, title))
+
+    entire = c6.execute("SELECT entire FROM stories WHERE title = ?", (title,))
+    entire = c6.fetchone()[0]
+    new_entire = entire + "\n" + new_text
+    c6.execute("UPDATE stories SET entire = ? WHERE title = ?", (new_entire, title))
+
+    contributors = c6.execute("SELECT contributors FROM stories WHERE title = ?", (title,))
+    contributors = c6.fetchone()[0]
+    new_contributors =  contributors + username + ","
+    c6.execute("UPDATE stories SET contributors = ? WHERE title = ?", (new_contributors, title))
+
+    contributions = c6.execute("SELECT contributions FROM users WHERE username = ?", (username,))
+    contributions = c6.fetchone()[0]
+    new_contributions = contributions + title + "~"
+    c6.execute("UPDATE users SET contributions = ? WHERE username = ?", (new_contributions, username))
+
     db.commit()
-    return render_template()
+    return render_template('story_view.html', story = new_text, title = title, editor = 1)
+db.close()
 
 #Displays login page and removes user from session
 @app.route("/logout", methods = ['GET', 'POST'])

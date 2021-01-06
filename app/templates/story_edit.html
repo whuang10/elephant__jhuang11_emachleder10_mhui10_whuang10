@@ -1,0 +1,28 @@
+<!--
+Team Elephant (Jeffrey Huang, Matthew Hui, Winnie Huang, Ethan Machleder)
+SoftDev
+K15 -- Sessions Greetings
+2020-12-11
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> EDIT PAGE </title>
+	</head>
+	<body>
+		<h1> Titles of Stories to Edit </h1>
+		<br>
+		{% if title_list| length > 0 %}
+				{% for title in title_list %}
+				  <form action = "/story_view" method = "post">
+					<input type = "hidden" value = "0" name = "editor">
+					<input type = "submit" value = "{{title}}" name = "title">
+				  </form>
+				{% endfor %}
+		{% endif %}
+
+		<form action = "/homepage">
+			<input type = "submit" value = "Return Home">
+		</form>
+	</body>
+</html>

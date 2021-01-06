@@ -7,28 +7,23 @@ P0 - Da Art of Storytellin' (Pt. 2)
 <!DOCTYPE html>
 <html>
   <head>
-    <title> REGISTER PAGE </title>
+    <title> Register Page </title>
   </head>
   <body>
 
-  <h1> REGISTER PAGE </h1>
-  
-  <h2> Register a username and password below! </h2>
-
-  <h3>{{error_type}}</h3>
-
-    <form action="/register_auth">
+  <h1>
+  Register a Username & Password
+  </h1>
+  <h2>{{ error_type }}</h2>
+    <form action="/register_auth" method = "post">
       <input type="text" placeholder="Username" name="new_username">
       <input type="password" placeholder="Password" name="new_password_1">
       <input type = "password" placeholder = "Confirm Passord" name = "new_password_2">
       <input type="submit" name="sub1">
     </form>
-
-  <h2> Already have an account? Login here:</h2>
-
-    <form action = "/logout">
-      <input type = "submit" value = "Login Page">
-    </form>
    <br>
+   <form action = "/logout">
+     <input type = "submit" value = "Login Page">
+   </form>
   </body>
 </html>
