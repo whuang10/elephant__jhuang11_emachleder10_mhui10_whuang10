@@ -22,7 +22,6 @@ db.close()
 app = Flask(__name__)    #create Flask object
 app.secret_key = os.urandom(32) #need this, if we didn't include this it would produce a runtime error
 
-
 #Checks if user is in session
 @app.route("/", methods = ['GET', 'POST']) #methods=['GET', 'POST']
 def disp_loginpage():
@@ -85,26 +84,50 @@ def welcome():
         for b in a:
             p_list.append(b)
 
+    usersContributions = []
+    user_index = u_list.index(username)
+
+    for x in c2.execute("SELECT contributions FROM users"):
+        usersContributions.append(x[0])
+
+    user_conts = usersContributions[user_index].split("~")
+    if (len(user_conts) >= 1):
+        user_conts.pop()
+
     if username in u_list:
         if password in p_list:
             session["user"] = username
-            global i
-            i = u_list.index(username)
-            return render_template('homepage.html', user = username)
+            return render_template('homepage.html', user = username, contribution_list = user_conts)
     else:
         return render_template('login.html', error_type = "Invalid login attempt, try again")
-    return render_template ('homepage.html')  #response to a form submission
+    #return render_template ('homepage.html', user = username, contribution_list = user_conts)  #response to a form submission
 db.close()
 
 #Displays homepage when successful login
 @app.route("/homepage", methods = ['GET', 'POST'])
 def returnHome():
-    return render_template('homepage.html', user = session["user"])
+    db = sqlite3.connect("p0database.db")
+    c4 = db.cursor()
+
+    usersContributions = []
+    userList = []
+    for x in c4.execute("SELECT username FROM users"):
+        userList.append(x[0])
+    user_index = userList.index(session["user"])
+
+    for x in c4.execute("SELECT contributions FROM users"):
+        usersContributions.append(x[0])
+
+    user_conts = usersContributions[user_index].split("~")
+    if (len(user_conts) >= 1):
+        user_conts.pop()
+
+    return render_template('homepage.html', user = session["user"], contribution_list = user_conts)
+db.close()
 
 #Asks user for a title for a new story
 @app.route("/create_story", methods = ['GET', 'POST'])
 def title_maker():
-    print(str(i) + "HEREIS THE USER_id")
     return render_template('story_creation.html', titleExists = 0)
 
 #Allows the user to make their own story. (Includes story details & title)
@@ -146,22 +169,70 @@ def story_check():
         for x in c3.execute("SELECT contributions FROM users"):
             for y in x:
                 userConts.append(y)
-
         #String with the user contributions of a specific person separated by ~ since we figure it was the least used symbol
         updatedUserConts = userConts[user_index] + title + "~"
-
         #Updates the database with new data
         c3.execute("UPDATE users SET contributions = ? WHERE username = ?", (updatedUserConts, username))
         db.commit()
         return render_template('story_view.html', story = orig_story, title = title)
 db.close()
 
+@app.route("/story_view", methods = ['GET', 'POST'])
+def displayStory():
+    title = request.form['title']
+    title_list = []
+    story_list = []
+    db = sqlite3.connect("p0database.db")
+    c5 = db.cursor()
+    for x in c5.execute("SELECT title FROM stories"):
+        title_list.append(x[0])
+    for x in c5.execute("SELECT entire FROM stories"):
+        story_list.append(x[0])
+    story_index = title_list.index(title)
+    return render_template('story_view.html', story = story_list[story_index], title = title)
+db.close()
+
+@app.route("/edit_stories", methods = ['GET', 'POST'])
+def story_edit():
+    db = sqlite3.connect("p0database.db")
+    c4 = db.cursor()
+    username = session["user"]
+    list_titles = []
+    list_output = []
+    for x in c4.execute("SELECT title FROM stories"):
+        list_titles.append(x)
+    count = 0
+    for x in c4.execute("SELECT contributors FROM stories"):
+        if username in x: #nothing happens
+            print()
+        else:
+            list_output.append(list_titles[count])
+        count = count + 1
+    return render_template
+
+#Allows user to edit a story he hasn't already editted
+@app.route("/add_text", methods = ['GET', 'POST'])
+def add_text():
+    db = sqlite3.connect("p0database.db")
+    c5 = db.cursor()
+    username = session["user"]
+    new_text = request.form['new_text']
+    title = request.form['title']
+    c5.execute("UPDATE stories SET recent = ? WHERE title = ?", (new_text, title))
+    new_entire = c5.execute("SELECT entire WHERE title = ? FROM stories", (title)) + "\n" + new_text
+    c5.execute("UPDATE stories SET entire = ? WHERE title = ?", (new_entire, title))
+    new_contributors = c5.execute("SELECT contributors WHERE title = ? FROM stories", (title)) + "~" + username
+    c5.execute("UPDATE stories SET contributors = ? WHERE title = ?", (new_contributors, title))
+    new_contributions = c5.execute("SELECT contributors WHERE username = ? FROM users", (username)) + "," + title
+    c5.execute("UPDATE users SET contributions = ? WHERE username = ?", (new_contributions,username))
+    db.commit()
+    return render_template()
+
 #Displays login page and removes user from session
 @app.route("/logout", methods = ['GET', 'POST'])
 def logout():
     session.pop("user", None) #removes the session
     return render_template('login.html')
-
 
 #Enables debugging, auto-restarting of server when this file is modified
 if __name__ == "__main__": #false if this file imported as module
