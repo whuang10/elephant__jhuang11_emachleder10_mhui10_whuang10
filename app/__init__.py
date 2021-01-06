@@ -38,9 +38,8 @@ def register():
 #Registration for new user, stores user info into users db
 @app.route("/register_auth", methods = ['GET', 'POST'])
 def registerConfirming():
-    #establishes new connection with database
     db = sqlite3.connect("p0database.db")
-    c2 = db.cursor()
+    c1 = db.cursor()
 
     #gets all the data from the register.html form to check if they exist/match
     u = request.form['new_username']
@@ -50,7 +49,7 @@ def registerConfirming():
 
     #Gets a list of all the registered usernames to check later on
     usernames_list = []
-    for x in c2.execute("SELECT username FROM users;"):
+    for x in c1.execute("SELECT username FROM users;"):
         usernames_list.append(x[0])
 
     #Firsts check if the passwords match
@@ -61,7 +60,6 @@ def registerConfirming():
         return render_template('register.html', error_type = "Username already exists, try again")
     #If both pass, it adds the newly registered user and directs the user to the login page
     else:
-        c1 = db.cursor()
         c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
         db.commit()
         return render_template("login.html", error_type = "Please login with your new account")
@@ -177,6 +175,7 @@ def story_check():
         return render_template('story_view.html', story = orig_story, title = title)
 db.close()
 
+#Displays a story
 @app.route("/story_view", methods = ['GET', 'POST'])
 def story_view():
     db = sqlite3.connect("p0database.db")
@@ -193,6 +192,7 @@ def story_view():
     return render_template('story_view.html', story = story_list[story_index], title = title, editor = editor)
 db.close()
 
+#Displays stories that the user can edit
 @app.route("/story_edit", methods = ['GET', 'POST'])
 def story_edit():
     db = sqlite3.connect("p0database.db")
@@ -204,8 +204,9 @@ def story_edit():
         list_titles.append(x[0])
     count = 0
     for x in c5.execute("SELECT contributors FROM stories"):
-        if username in x: #nothing happens
-            print()
+        print(x)
+        if username in x[0]: #nothing happens
+            print("here")
         else:
             list_output.append(list_titles[count])
         count = count + 1
