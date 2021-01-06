@@ -204,9 +204,8 @@ def story_edit():
         list_titles.append(x[0])
     count = 0
     for x in c5.execute("SELECT contributors FROM stories"):
-        print(x)
         if username in x[0]: #nothing happens
-            print("here")
+            print()
         else:
             list_output.append(list_titles[count])
         count = count + 1
