@@ -11,8 +11,9 @@ P0 - Da Art of Storytellin' (Pt. 2)
   </head>
   <body>
 
+
       {% if titleExists == 0 %}
-      <form action = "/story_check">
+      <form action = "/story_check" method = "post">
       <h1>    Create a Title:    </h1>
       <input type = "text" placeholder = "Title" name = "temp-title">
 
@@ -21,12 +22,12 @@ P0 - Da Art of Storytellin' (Pt. 2)
         <input type = "submit" value = "Create Story">
       </form>
       {% elif titleExists == 1 %}
-      <form action = "/story_check">
+      <form action = "/story_check" method = "post">
       <h3> Title Already Exists, please enter a new one: </h3>
       <input type = "text" placeholder = "Title" name = "temp-title">
-      
+
       <h4> Story: </h4>
-      <span> <h5> <input type = "text" value = {{story}} name = "story"> </h5> </span>
+      <span> <h5> <input type = "text" value = "{{story}}" name = "story"> </h5> </span>
       <input type = "submit" value = "Create Story">
       </form>
       {% endif %}
@@ -36,4 +37,3 @@ P0 - Da Art of Storytellin' (Pt. 2)
       </form>
 
   </body>
-</html>
