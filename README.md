@@ -25,4 +25,5 @@ Ethan - Database
   1. `git clone https://github.com/Jeffrey-Huang11/elephant__jhuang11_emachleder10_mhui10_whuang10` or 
      `git clone git@github.com:Jeffrey-Huang11/elephant__jhuang11_emachleder10_mhui10_whuang10.git`
   2. Add files in requirements.txt with `pip install`
-  3. Run `python3 __init__.py`
+  3. Move to app directory, cd to `elephant__jhuang11_emachleder10_mhui10_whuang10\app`
+  4. Run `python3 __init__.py`
