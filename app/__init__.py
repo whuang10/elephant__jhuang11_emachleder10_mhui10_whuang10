@@ -95,7 +95,7 @@ def welcome():
     if username in u_list:
         if password in p_list:
             session["user"] = username
-            return render_template('homepage.html', user = username, contribution_list = user_conts)
+            return render_template('homepage.html', user = username, contribution_list = user_conts, message = "Your Login Has Been Successful! \(^-^)/")
     else:
         return render_template('login.html', error_type = "Invalid login attempt, try again")
     #return render_template ('homepage.html', user = username, contribution_list = user_conts)  #response to a form submission
@@ -172,7 +172,7 @@ def story_check():
         #Updates the database with new dataupdatedUserConts
         c3.execute("UPDATE users SET contributions = ? WHERE username = ?", (updatedUserConts, username))
         db.commit()
-        return render_template('story_view.html', story = orig_story, title = title)
+        return render_template('story_view.html', entire = orig_story, title = title)
 db.close()
 
 #Displays a story
@@ -183,13 +183,16 @@ def story_view():
     title = request.form['title']
     editor = int(request.form['editor'])
     title_list = []
-    story_list = []
+    entire_list = []
+    recent_list = []
     for x in c4.execute("SELECT title FROM stories"):
         title_list.append(x[0])
     for x in c4.execute("SELECT entire FROM stories"):
-        story_list.append(x[0])
+        entire_list.append(x[0])
+    for x in c4.execute("SELECT recent FROM stories"):
+        recent_list.append(x[0])
     story_index = title_list.index(title)
-    return render_template('story_view.html', story = story_list[story_index], title = title, editor = editor)
+    return render_template('story_view.html', entire = entire_list[story_index], recent = recent_list[story_index], title = title, editor = editor)
 db.close()
 
 #Displays stories that the user can edit
@@ -238,7 +241,7 @@ def story_editor():
     c6.execute("UPDATE users SET contributions = ? WHERE username = ?", (new_contributions, username))
 
     db.commit()
-    return render_template('story_view.html', story = new_text, title = title, editor = 1)
+    return render_template('story_view.html', entire = new_text, title = title, editor = 1)
 db.close()
 
 #Displays login page and removes user from session

@@ -11,15 +11,18 @@ P0 - Da Art of Storytellin' (Pt. 2)
   </head>
   <body>
     <h1> Title: {{title}} </h1>
-    <p> Story: {{story}} </p>
-
+    <p> Story:            </p>
 	{% if editor == 0 %}
+    {{recent}}
 		<form action = "/story_editor" method = "post">
 			<h1>	New Text:	</h1>
 			<input type = "hidden" value = "{{title}}" name = "title">
 			<span> <h5> <input type = "text" value = "" name = "new_text"> </h5> </span>
 			<input type = "submit" value = "Update Story">
 		</form>
+
+    {%else %}
+      {{entire}}
     {% endif %}
 
     <form action = "/homepage" method = "post">
