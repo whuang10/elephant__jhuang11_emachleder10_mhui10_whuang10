@@ -1,8 +1,10 @@
 # Collaborative StoryTelling Website by Team Elephant
 SoftDev Project 0: Jeffrey Huang(PM), Ethan Machleder, Matthew Hui, Winnie Huang
 
-Description: Registered users can add to existing stories or create new stories. When adding to an existing story, the user can only view the latest edit, not the entire story. After contributing to a story, the user can then view the whole story (most current version).
+## Description: 
+Registered users can add to existing stories or create new stories. When adding to an existing story, the user can only view the latest edit, not the entire story. After contributing to a story, the user can then view the whole story (most current version).
 
+## Duties of Each Member
 Jeffrey (PM) - Flask App
   - update information in database from user entries/edits
   - communicate the information in database to the website
@@ -19,4 +21,8 @@ Matthew - Flask App
 Ethan - Database
   - creating databases and managing databases (SQlite files) 
 
-Launch codes:
+## Launch codes:
+  1. `git clone https://github.com/Jeffrey-Huang11/elephant__jhuang11_emachleder10_mhui10_whuang10` or 
+     `git clone git@github.com:Jeffrey-Huang11/elephant__jhuang11_emachleder10_mhui10_whuang10.git`
+  2. Add files in requirements.txt with `pip install`
+  3. Run `python3 __init__.py`
