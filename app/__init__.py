@@ -83,14 +83,14 @@ def welcome():
             p_list.append(b)
 
     usersContributions = []
-    user_index = u_list.index(username)
+    if username in u_list:
+        user_index = u_list.index(username)
+        for x in c2.execute("SELECT contributions FROM users"):
+            usersContributions.append(x[0])
+        user_conts = usersContributions[user_index].split("~")
 
-    for x in c2.execute("SELECT contributions FROM users"):
-        usersContributions.append(x[0])
-
-    user_conts = usersContributions[user_index].split("~")
-    if (len(user_conts) >= 1):
-        user_conts.pop()
+        if (len(user_conts) >= 1):
+            user_conts.pop()
 
     if username in u_list:
         if password in p_list:
