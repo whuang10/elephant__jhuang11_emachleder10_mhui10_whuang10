@@ -13,9 +13,9 @@ P0 - Da Art of Storytellin' (Pt. 2)
 
     <h3>    Welcome {{ user }} !    </h3>
     <h4> {{message}}  </h4>
-    <br>
+
     {% if contribution_list| length > 0 %}
-		<h5> Stories Contributed: </h5>
+		<h5> Stories You've Contributed To: </h5>
 		{% for title in contribution_list %}
 			<form action = "/story_view" method = "post">
 				<input type = "hidden" value = "1" name = "editor">
@@ -23,14 +23,18 @@ P0 - Da Art of Storytellin' (Pt. 2)
 			</form>
 		{% endfor %}
     {% endif %}
-    <br>
+
+    <h5> Create A New Story: </h5>
     <form action = "/create_story">
       <input type = "submit" value = "Create Story">
     </form>
+
+    <h5> Edit an Existing Story: </h5>
     <form action = "/story_edit">
       <input type = "submit" value = "Edit Stories">
     </form>
 
+    <h5> Logout: </h5>
     <form action = "/logout">
       <input type = "submit" value = "Logout">
     </form>
