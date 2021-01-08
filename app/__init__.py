@@ -77,7 +77,6 @@ def welcome():
     username = request.form['username']
     password = request.form['password']
 
-
     u_list = []
     for x in c2.execute("SELECT username FROM users"):
         for y in x:
@@ -86,7 +85,6 @@ def welcome():
     for a in c2.execute("SELECT password FROM users"):
         for b in a:
             p_list.append(b)
-
 
     usersContributions = []
     if username in u_list:
