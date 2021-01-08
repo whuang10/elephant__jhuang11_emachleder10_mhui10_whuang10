@@ -52,12 +52,17 @@ def registerConfirming():
     for x in c1.execute("SELECT username FROM users;"):
         usernames_list.append(x[0])
 
-    #Firsts check if the passwords match
-    if p != p1:
-        return render_template('register.html', error_type = "Passwords do not match, try again")
+
+    if len(u.strip()) == 0:
+        return render_template('register.html', error_type = "Please enter valid username, try again")
+    if len(p.strip()) == 0:
+        return render_template('register.html', error_type = "Please enter valid password, try again")
     #Then checks if the username exists
     elif u in usernames_list:
         return render_template('register.html', error_type = "Username already exists, try again")
+    #Firsts check if the passwords match
+    elif p != p1:
+        return render_template('register.html', error_type = "Passwords do not match, try again")
     #If both pass, it adds the newly registered user and directs the user to the login page
     else:
         c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
