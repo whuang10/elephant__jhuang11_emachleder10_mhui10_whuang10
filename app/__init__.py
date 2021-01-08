@@ -98,11 +98,11 @@ def welcome():
             user_conts.pop()
 
     if username in u_list:
-        if password in p_list:
-            session["user"] = username
-            return render_template('homepage.html', user = username, contribution_list = user_conts, message = "Your Login Has Been Successful! \(^-^)/")
-    else:
-        return render_template('login.html', error_type = "Invalid login attempt, please try again.")
+        if password: 
+            if password in p_list:
+                session["user"] = username
+                return render_template('homepage.html', user = username, contribution_list = user_conts, message = "Your Login Has Been Successful! \(^-^)/")
+    return render_template('login.html', error_type = "Invalid login attempt, please try again.")
     #return render_template ('homepage.html', user = username, contribution_list = user_conts)  #response to a form submission
 db.close()
 
