@@ -52,7 +52,6 @@ def registerConfirming():
     for x in c1.execute("SELECT username FROM users;"):
         usernames_list.append(x[0])
 
-
     if len(u.strip()) == 0:
         return render_template('register.html', error_type = "Please enter valid username, try again")
     if len(p.strip()) == 0:
