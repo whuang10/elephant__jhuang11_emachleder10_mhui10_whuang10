@@ -7,15 +7,16 @@ P0 - Da Art of Storytellin' (Pt. 2)
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="/static/css/layout.css">
     <title> Homepage </title>
   </head>
   <body>
 
-    <h3>    Welcome {{ user }} !    </h3>
-    <h4> {{message}}  </h4>
+    <h1>    Welcome {{ user }} !    </h1>
+    <h2> {{message}}  </h2>
 
     {% if contribution_list| length > 0 %}
-		<h5> Stories You've Contributed To: </h5>
+		<h3> Stories You've Contributed To: </h3>
 		{% for title in contribution_list %}
 			<form action = "/story_view" method = "post">
 				<input type = "hidden" value = "1" name = "editor">
@@ -24,17 +25,17 @@ P0 - Da Art of Storytellin' (Pt. 2)
 		{% endfor %}
     {% endif %}
 
-    <h5> Create A New Story: </h5>
+    <h3> Create A New Story: </h3>
     <form action = "/create_story">
       <input type = "submit" value = "Create Story">
     </form>
 
-    <h5> Edit an Existing Story: </h5>
+    <h3> Edit an Existing Story: </h3>
     <form action = "/story_edit">
       <input type = "submit" value = "Edit Stories">
     </form>
 
-    <h5> Logout: </h5>
+    <h3> Logout: </h3>
     <form action = "/logout">
       <input type = "submit" value = "Logout">
     </form>

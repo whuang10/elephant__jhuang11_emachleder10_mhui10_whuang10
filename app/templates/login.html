@@ -6,16 +6,18 @@ K15 -- Sessions Greetings
 -->
 <!DOCTYPE html>
 <html>
-
   <head>
+    <link rel="stylesheet" href="/static/css/layout.css">
     <title> LOGIN PAGE </title>
   </head>
 
   <body>
 
+    <h1> Welcome to Team Elephant's </h1>
+    <h1> Story Creation Site! </h1>
+    <h2> Enter your username & password below to proceed. </h2>
+    <h3> {{error_type}} </h3>
 
-  <h1> Welcome, Enter your username & password below to proceed. </h1>
-  {{error_type}}
     <form action="/auth" method = "post">
       <input type="text" placeholder="Username" name="username">
       <input type="password" placeholder="Password" name="password">

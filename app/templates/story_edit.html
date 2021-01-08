@@ -7,16 +7,17 @@ K15 -- Sessions Greetings
 <!DOCTYPE html>
 <html>
 	<head>
-		<title> EDIT PAGE </title>
+		<link rel="stylesheet" href="/static/css/layout.css">
+		<title> Edit Story </title>
 	</head>
 	<body>
-		<h1> Titles of Stories to Edit </h1>
+		<h1> Edit a Story </h1>
     {% if title_list| length == 0 %}
-      <h3> You have no stories to edit, sorry ;( </h3>
+      <h3> There are no stories to edit, sorry :( Come abck soon! </h3>
     {% endif %}
 
-		<br>
 		{% if title_list| length > 0 %}
+			<h3> Contribute to one of these stories: </h3>
 				{% for title in title_list %}
 				  <form action = "/story_view" method = "post">
 					<input type = "hidden" value = "0" name = "editor">
@@ -25,6 +26,7 @@ K15 -- Sessions Greetings
 				{% endfor %}
 		{% endif %}
 
+		<br>
 		<form action = "/homepage">
 			<input type = "submit" value = "Return Home">
 		</form>

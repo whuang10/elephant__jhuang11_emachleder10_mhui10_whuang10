@@ -54,12 +54,12 @@ def registerConfirming():
 
     if len(u.strip()) == 0:
         return render_template('register.html', error_type = "Please enter valid username, try again")
-    if len(p.strip()) == 0:
+    elif len(p.strip()) == 0:
         return render_template('register.html', error_type = "Please enter valid password, try again")
-    #Then checks if the username exists
+    #Checks if the username exists
     elif u in usernames_list:
         return render_template('register.html', error_type = "Username already exists, try again")
-    #Firsts check if the passwords match
+    #Checks if the passwords match
     elif p != p1:
         return render_template('register.html', error_type = "Passwords do not match, try again")
     #If both pass, it adds the newly registered user and directs the user to the login page
@@ -77,6 +77,8 @@ def welcome():
     username = request.form['username']
     password = request.form['password']
 
+    print("1")
+
     u_list = []
     for x in c2.execute("SELECT username FROM users"):
         for y in x:
@@ -86,6 +88,7 @@ def welcome():
         for b in a:
             p_list.append(b)
 
+    print("2")
     usersContributions = []
     if username in u_list:
         user_index = u_list.index(username)
@@ -96,13 +99,12 @@ def welcome():
         if (len(user_conts) >= 1):
             user_conts.pop()
 
-    if username in u_list:
-        if password in p_list:
-            session["user"] = username
-            return render_template('homepage.html', user = username, contribution_list = user_conts, message = "Your Login Has Been Successful! \(^-^)/")
+    if username in u_list and password in p_list:
+        session["user"] = username
+        return render_template('homepage.html', user = username, contribution_list = user_conts, message = "Your Login Has Been Successful! \(^-^)/")
     else:
-        return render_template('login.html', error_type = "Invalid login attempt, try again")
-    #return render_template ('homepage.html', user = username, contribution_list = user_conts)  #response to a form submission
+        print("4")
+        return render_template('login.html', error_type = "Invalid login attempt, please try again.")
 db.close()
 
 #Displays homepage when successful login
