@@ -1,7 +1,7 @@
 # Team Elephant (Jeffrey Huang, Matthew Hui, Winnie Huang, Ethan Machleder)
 # SoftDev
 # P0 - Da Art of Storytellin' (Pt. 2)
-# 2021-1-11
+# 2021-1-07
 from flask import Flask             #facilitate flask webserving
 from flask import render_template   #facilitate jinja templating
 from flask import request           #facilitate form submission
@@ -77,8 +77,6 @@ def welcome():
     username = request.form['username']
     password = request.form['password']
 
-    print("1")
-
     u_list = []
     for x in c2.execute("SELECT username FROM users"):
         for y in x:
@@ -88,7 +86,6 @@ def welcome():
         for b in a:
             p_list.append(b)
 
-    print("2")
     usersContributions = []
     if username in u_list:
         user_index = u_list.index(username)
@@ -103,7 +100,6 @@ def welcome():
         session["user"] = username
         return render_template('homepage.html', user = username, contribution_list = user_conts, message = "Your Login Has Been Successful! \(^-^)/")
     else:
-        print("4")
         return render_template('login.html', error_type = "Invalid login attempt, please try again.")
 db.close()
 
