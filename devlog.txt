@@ -9,7 +9,7 @@ Elephant -- 2020-12-18 21:03
 	- Finshed new design doc for P0
 	- Updated README and devlog
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-JeffreyH -- 2020-12-22 20:28
+jeffreyH -- 2020-12-22 20:28
 	- Re-added design_wiki
 	- Revised design.pdf with adding a key to our site map, adding a expected deadline, and changing a column of our database referencing team GreedyToads
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -17,25 +17,25 @@ Elephant -- 2020-12-29 17:20
 	- Created and completed user registration and login, added templates for login and register
 	- Started the construction of db user tables with basic information
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-MatthewH -- 2021-01-02 18:02
+matthewH -- 2021-01-02 18:02
 	- Created and started story creation page
 	- Updated user and story tables with new columns
 	- Worked out table ids
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-MatthewH -- 2021-01-04 23:15
+matthewH -- 2021-01-04 23:15
 	- Fixed user sessions
 	- Added global variables 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-JeffreyH -- 2021-01-05 16:40
+jeffreyH -- 2021-01-05 16:40
 	- Fixed bugs with registration and table updates of contributions
 	- Updated tables to reflect better columns
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-EthanM -- 2021-01-05 21:30
+ethanM -- 2021-01-05 21:30
 	- Added method to edit stories, still missing template
 	- Added stories that user has contributed to on homepage
 	- Updated issues with session
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-WinnieH -- 2021-01-06 09:30
+winnieH -- 2021-01-06 09:30
 	- Updated templates to allow for easier user interaction
 	- Added launch codes for user access
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
