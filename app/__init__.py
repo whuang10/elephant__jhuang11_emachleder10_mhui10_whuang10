@@ -36,6 +36,7 @@ def register():
     return render_template('register.html')
 
 #Registration for new user, stores user info into users db
+#Registration for new user, stores user info into users db
 @app.route("/register_auth", methods = ['GET', 'POST'])
 def registerConfirming():
     db = sqlite3.connect("p0database.db")
@@ -52,12 +53,16 @@ def registerConfirming():
     for x in c1.execute("SELECT username FROM users;"):
         usernames_list.append(x[0])
 
-    #Firsts check if the passwords match
-    if p != p1:
-        return render_template('register.html', error_type = "Passwords do not match, try again")
+    if len(u.strip()) == 0:
+        return render_template('register.html', error_type = "Please enter valid username, try again.")
+    if len(p.strip()) == 0:
+        return render_template('register.html', error_type = "Please enter valid password, try again.")
     #Then checks if the username exists
     elif u in usernames_list:
-        return render_template('register.html', error_type = "Username already exists, try again")
+        return render_template('register.html', error_type = "Username already exists, please try again.")
+    #Firsts check if the passwords match
+    elif p != p1:
+        return render_template('register.html', error_type = "Passwords do not match, please try again.")
     #If both pass, it adds the newly registered user and directs the user to the login page
     else:
         c1.execute("INSERT INTO users (username, password, contributions) VALUES (?, ?, ?)", (u, p, c))
@@ -97,7 +102,7 @@ def welcome():
             session["user"] = username
             return render_template('homepage.html', user = username, contribution_list = user_conts, message = "Your Login Has Been Successful! \(^-^)/")
     else:
-        return render_template('login.html', error_type = "Invalid login attempt, try again")
+        return render_template('login.html', error_type = "Invalid login attempt, please try again.")
     #return render_template ('homepage.html', user = username, contribution_list = user_conts)  #response to a form submission
 db.close()
 
@@ -128,7 +133,7 @@ db.close()
 def create_story():
     return render_template('story_creation.html', titleExists = 0)
 
-#Allows the user to make their own story. (Includes story details & title)
+#Allows the user to make their own story (Includes story details & title)
 @app.route("/story_check", methods = ['GET', 'POST'])
 def story_check():
     #Info from the html file

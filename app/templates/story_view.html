@@ -7,26 +7,30 @@ P0 - Da Art of Storytellin' (Pt. 2)
 <!DOCTYPE html>
 <html>
   <head>
-    <title> Story View</title>
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <title> View Story </title>
   </head>
   <body>
     <h1> Title: {{title}} </h1>
-    <p> Story:            </p>
-	{% if editor == 0 %}
+
+    {% if editor == 0 %}
+    <h2> Last Contribution: </h2>
     {{recent}}
 		<form action = "/story_editor" method = "post">
-			<h1>	New Text:	</h1>
-			<input type = "hidden" value = "{{title}}" name = "title">
-			<span> <h5> <input type = "text" value = "" name = "new_text"> </h5> </span>
+			<h2>	New Text:	</h2>
+      <input type = "hidden" value = "{{title}}" name = "title">
+      <textarea name="new_text" rows="20" cols="150"></textarea>
+      <br>
 			<input type = "submit" value = "Update Story">
 		</form>
 
-    {%else %}
+    {% else %}
       {{entire}}
     {% endif %}
 
     <form action = "/homepage" method = "post">
-		<input type = "submit" value = "Return Home">
+      <br>
+      <input type = "submit" value = "Return Home">
     </form>
   </body>
 </html>
